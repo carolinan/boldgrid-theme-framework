@@ -129,7 +129,7 @@ class Boldgrid_Framework_Customizer_Typography {
 		$css .= ".bg-font-family-menu { font-family: $menu_font_family !important }";
 
 		foreach ( $this->get_typography_settings() as $typography_setting ) {
-			$css .= ".{$typography_setting['class_name']} { font-family: {$typography_setting['value']['font-family']} !important }";
+			$css .= ".{$typography_setting['class_name']} { font-family: {$typography_setting['value']['font-family']['font-family']} !important }";
 		}
 
 		return $css;
@@ -154,36 +154,10 @@ class Boldgrid_Framework_Customizer_Typography {
 	 * @return string $css Generated CSS styles.
 	 */
 	public function generate_font_size_css( $css = '' ) {
-		$css .= $this->generate_body_css();
 		$css .= $this->generate_headings_css();
 		$css .= $this->generate_font_classes();
 
 		return apply_filters( 'bgtfw_inline_css', $css );
-	}
-
-	/**
-	 * Generates headings CSS to apply to frontend.
-	 *
-	 * @since  2.0.0
-	 *
-	 * @param  string $css CSS to append body styles to.
-	 *
-	 * @return string $css CSS for body styles.
-	 */
-	public function generate_body_css( $css = '' ) {
-		// Body Font.
-		$body_font = get_theme_mod( 'bgtfw_body_typography' );
-		$body_font_size = ! empty( $body_font['font-size'] ) ? $body_font['font-size'] : $this->configs['customizer-options']['typography']['defaults']['body_font_size'];
-
-		$body_base = ( int ) preg_replace( '/[^0-9]./', '', $body_font_size );
-		$body_unit = preg_replace( '/[^a-z]/i', '', $body_font_size );
-		$body_unit = empty( $body_unit ) ? 'px' : $body_unit;
-
-		// Blockquotes.
-		$blockquote = $body_base * 1.25;
-		$css .= 'blockquote, blockquote p, .mod-blockquote {font-size:' . $blockquote . $body_unit . ';}';
-
-		return $css;
 	}
 
 	/**
@@ -197,28 +171,7 @@ class Boldgrid_Framework_Customizer_Typography {
 	 */
 	public function generate_headings_css( $css = '' ) {
 		$headings_font = get_theme_mod( 'bgtfw_headings_typography' );
-		$headings_base = get_theme_mod( 'bgtfw_headings_font_size' );
-		$headings_unit = 'px';
-
 		$selectors = $this->configs['customizer-options']['typography']['selectors'];
-
-		foreach ( $selectors as $selector => $options ) {
-			if ( 'subheadings' === $options['type'] ) {
-				continue;
-			}
-
-			$css .= $selector . '{font-size:';
-
-			if ( 'floor' === $options['round'] ) {
-				$css .= floor( $headings_base * $options['amount'] );
-			}
-
-			if ( 'ceil' === $options['round'] ) {
-				$css .= ceil( $headings_base * $options['amount'] );
-			}
-
-			$css .= "$headings_unit;}";
-		}
 
 		$css .= $this->generate_headings_color_css( 'bgtfw_headings_color', '', $selectors );
 
@@ -270,19 +223,23 @@ class Boldgrid_Framework_Customizer_Typography {
 	 *
 	 * @since  2.0.0
 	 *
-	 * @param  string $configs BGTFW Configurations.
+	 * @param  string $configs  BGTFW Configurations.
+	 * @param  string $elements Elements to apply settings to.
 	 *
 	 * @return string $values  Formatted output configs.
 	 */
-	public function get_output_values( $configs ) {
-		$elements = implode( ', ', array_keys( $configs['customizer-options']['typography']['selectors'] ) );
+	public function get_output_values( $configs, $elements = '' ) {
+		if ( empty( $elements ) ) {
+			$elements = implode( ', ', array_keys( $configs['customizer-options']['typography']['selectors'] ) );
+		}
+
 		$props = [ 'font-family', 'line-height', 'text-transform', 'variant', 'font-style' ];
 		$values = [];
 
 		foreach ( $props as $prop ) {
 			$values[] = [
 				'element' => $elements,
-				'property' => $prop,
+				'property' => 'variant' === $prop ? 'font-weight' : $prop,
 				'choice' => $prop,
 			];
 		}

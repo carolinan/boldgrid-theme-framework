@@ -18,7 +18,7 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
 	 * Adds a color-palette control.
 	 * This is essentially a radio control, styled as a palette.
 	 */
-	class Boldgrid_Framework_Customizer_Control_Palette_Selector extends Kirki_Control_Color_Palette {
+	class Boldgrid_Framework_Customizer_Control_Palette_Selector extends Kirki\Control\Color_Palette {
 
 		/**
 		 * The control type.

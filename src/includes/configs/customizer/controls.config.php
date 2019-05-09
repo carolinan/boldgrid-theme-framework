@@ -1121,20 +1121,77 @@ return array(
 		'priority'    => 20,
 		'output'      => $bgtfw_typography->get_output_values( $bgtfw_configs ),
 	),
-	'bgtfw_headings_font_size' => array(
+	'bgtfw_heading_font_size' => [
 		'type'        => 'slider',
-		'transport'   => 'postMessage',
-		'settings'    => 'bgtfw_headings_font_size',
-		'label'       => esc_attr__( 'Font Size', 'bgtfw' ),
+		'settings'    => 'bgtfw_heading_font_size',
+		'label'       => esc_html__( 'Headings Font-Size', 'bgtfw' ),
+		'description' => esc_html__( 'Choose the main font-size for your content. We recommend you a font-size greater than 18px to ensure greater readability.', 'bgtfw' ),
 		'section'     => 'headings_typography',
-		'default'     => '14',
-		'choices'     => array(
-			'min'  => '6',
-			'max'  => '42',
-			'step' => '1',
-		),
-		'priority'    => 30,
-	),
+		'default'     => 18,
+		'priority'    => 60,
+		'transport'   => 'postMessage',
+		'css_vars'    => [ '--bgtfw-heading-size', '$px' ],
+		'choices'     => [
+			'min'    => 6,
+			'max'    => 42,
+			'step'   => 1,
+			'suffix' => 'px',
+		],
+	],
+	'bgtfw_heading_font_ratio' => [
+		'type'        => 'slider',
+		'settings'    => 'bgtfw_heading_font_ratio',
+		'label'       => esc_html__( 'Fluid typography Ratio', 'bgtfw' ),
+		'description' => esc_html__( 'Defines by how much your font-size will change depending on the screen-size. Larger values will increase the font-size more on bigger screens. Set to 0 if you do not want the font-size to change depending on the screen-size.', 'bgtfw' ),
+		'section'     => 'headings_typography',
+		'default'     => 0.25,
+		'priority'    => 70,
+		'transport'   => 'postMessage',
+		'css_vars'    => '--bgtfw-heading-ratio',
+		'choices'     => [
+			'min'  => 0,
+			'max'  => 1,
+			'step' => .001,
+		],
+	],
+	'bgtfw_heading_font_scale' => [
+		'settings'          => 'bgtfw_heading_font_scale',
+		'type'              => 'radio-buttonset',
+		'label'             => esc_attr__( 'Typography Scale', 'bgtfw' ),
+		'description'       => esc_attr__( 'Controls the size relations between your headers and your main typography font-size.', 'bgtfw' ),
+		'section'           => 'headings_typography',
+		'default'           => '1.26',
+		'transport'         => 'postMessage',
+		'css_vars'          => '--bgtfw-heading-scale',
+		'priority'          => 80,
+		'choices'           => [
+			/* Translators: Numeric representation of the scale. */
+			'1.067' => sprintf( esc_attr__( '%s - Minor Second', 'bgtfw' ), '1.067' ),
+			/* Translators: Numeric representation of the scale. */
+			'1.125' => sprintf( esc_attr__( '%s - Major Second', 'bgtfw' ), '1.125' ),
+			/* Translators: Numeric representation of the scale. */
+			'1.149' => sprintf( esc_attr__( '%s - Musical Pentatonic (classic)', 'bgtfw' ), '1.149' ),
+			/* Translators: Numeric representation of the scale. */
+			'1.189' => sprintf( esc_attr__( '%s - Musical Tetratonic', 'bgtfw' ), '1.189' ),
+			/* Translators: Numeric representation of the scale. */
+			'1.25'  => sprintf( esc_attr__( '%s - Major Third', 'bgtfw' ), '1.25' ),
+			/* Translators: Numeric representation of the scale. */
+			'1.26'  => sprintf( esc_attr__( '%s - Musical Tritonic', 'bgtfw' ), '1.26' ),
+			/* Translators: Numeric representation of the scale. */
+			'1.272' => sprintf( esc_attr__( '%s - Golden Diatonic', 'bgtfw' ), '1.272' ),
+			/* Translators: Numeric representation of the scale. */
+			'1.333' => sprintf( esc_attr__( '%s - Perfect Fourth', 'bgtfw' ), '1.333' ),
+			/* Translators: Numeric representation of the scale. */
+			'1.444' => sprintf( esc_attr__( '%s - Augmented Fourth', 'bgtfw' ), '1.444' ),
+			/* Translators: Numeric representation of the scale. */
+			'1.5' => sprintf( esc_attr__( '%s - Perfect Fifth', 'bgtfw' ), '1.5' ),
+			/* Translators: Numeric representation of the scale. */
+			'1.618' => sprintf( esc_attr__( '%s - Golden Ratio', 'bgtfw' ), '1.618' ),
+		],
+		'sanitize_callback' => function( $value ) {
+			return is_numeric( $value ) ? $value : '1.26';
+		},
+	],
 	'bgtfw_tagline_color' => array(
 		'type'        => 'bgtfw-palette-selector',
 		'transport'   => 'postMessage',
@@ -1307,20 +1364,14 @@ return array(
 		'section'     => 'body_typography',
 		'default'     => array(
 			'font-family'    => 'Roboto',
-			'variant'        => '100',
-			'font-size'      => '18px',
-			'line-height'    => '1.4',
+			'variant'        => 'regular',
+			'line-height'    => '1.5',
 			'letter-spacing' => '0',
 			'subsets'        => array( 'latin-ext' ),
 			'text-transform' => 'none',
-
 		),
 		'priority'    => 10,
-		'output'      => array(
-			array(
-				'element' => '.widget, .site-content, .attribution-theme-mods-wrapper, .gutenberg .edit-post-visual-editor, .mce-content-body',
-			),
-		),
+		'output'      => $bgtfw_typography->get_output_values( $bgtfw_configs, '.widget, .site-content, .attribution-theme-mods-wrapper, .gutenberg .edit-post-visual-editor, .mce-content-body' ),
 	),
 
 	/* Start Global Page Title Control */

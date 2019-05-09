@@ -1,0 +1,51 @@
+html {
+	font-size: var(--bgtfw-heading-size);
+}
+
+body {
+	font-size: calc(var(--bgtfw-heading-size) + var(--bgtfw-heading-ratio) * 1vw);
+}
+
+.h1,
+h1 {
+	font-size: calc(var(--bgtfw-heading-scale) * var(--bgtfw-heading-scale) * var(--bgtfw-heading-scale) * var(--bgtfw-heading-scale) * 1em);
+}
+
+.h2,
+h2 {
+	font-size: calc(var(--bgtfw-heading-scale) * var(--bgtfw-heading-scale) * var(--bgtfw-heading-scale) * 1em);
+}
+
+.h3,
+h3,
+.has-large-font-size {
+	font-size: calc(var(--bgtfw-heading-scale) * var(--bgtfw-heading-scale) * 1em);
+}
+
+.h4,
+h4,
+.has-medium-font-size {
+	font-size: calc(var(--bgtfw-heading-scale) * 1em);
+}
+
+.h5,
+h5,
+.has-small-font-size {
+	font-size: 1em;
+}
+
+.h6,
+h6 {
+	font-size: calc(1em / var(--bgtfw-heading-scale));
+}
+
+.smaller,
+smaller {
+	font-size: calc(1em / var(--bgtfw-heading-scale) / var(--bgtfw-heading-scale));
+
+}
+
+.smallest,
+smallest {
+	font-size: calc(1em / var(--bgtfw-heading-scale) / var(--bgtfw-heading-scale) / var(--bgtfw-heading-scale));
+}
