@@ -202,7 +202,20 @@ class Boldgrid_Framework_Custom_Header {
 		</style>
 		<?php
 	}
-
+	/**
+	 * Add Header Transparency.
+	 *
+	 * @sicne SINCEVERSION
+	 */
+	public function add_header_transparency() {
+		$header_transparent = get_theme_mod( 'bgtfw_header_transparent' );
+		if ( true === $header_transparent ) {
+			Boldgrid_Framework_Customizer_Generic::add_inline_style(
+				'header-background-transparent',
+				'#masthead { background-color: rgba(0,0,0,0) !important; }'
+			);
+		}
+	}
 	/**
 	 * Add the header color to inline styles.
 	 *
@@ -211,17 +224,35 @@ class Boldgrid_Framework_Custom_Header {
 	public function add_overlay_color() {
 		$overlay_enabled = get_theme_mod( 'bgtfw_header_overlay' );
 		$overlay_color = get_theme_mod( 'bgtfw_header_overlay_color' );
+		$has_header_image = ( 'remove-header' !== get_theme_mod( 'header_image' ) );
+		$header_transparent = get_theme_mod( 'bgtfw_header_transparent' );
 		if ( $overlay_color && $overlay_enabled ) {
 			$overlay_color = explode( ':', $overlay_color );
 			$overlay_color = array_pop( $overlay_color );
 			$color_obj = ariColor::newColor( $overlay_color );
 			$color_obj->alpha = get_theme_mod( 'bgtfw_header_overlay_alpha', 0.7 );
-			if ( $overlay_color ) {
+			if ( $overlay_color && $has_header_image ) {
+				$this->add_header_transparency();
 				Boldgrid_Framework_Customizer_Generic::add_inline_style(
 					'header-image-overlay',
 					'#wp-custom-header::after { background-color:' . $color_obj->toCSS( 'rgba' ) . '; }'
 				);
+			} elseif ( $overlay_color && ! $has_header_image && $header_transparent) {
+				$this->add_header_transparency();
+				Boldgrid_Framework_Customizer_Generic::add_inline_style(
+					'header-overlay',
+					'#masthead > .boldgrid-section { background-color:' . $color_obj->toCSS( 'rgba' ) . ' !important; }'
+				);
+			} elseif ( $overlay_color && ! $has_header_image && ! $header_transparent) {
+				Boldgrid_Framework_Customizer_Generic::add_inline_style(
+					'header-overlay',
+					'#masthead > .boldgrid-section { background-color:' . $color_obj->toCSS( 'rgba' ) . ' !important; }'
+				);
+			} else {
+				$this->add_header_transparency();
 			}
+		} else {
+			$this->add_header_transparency();
 		}
 	}
 

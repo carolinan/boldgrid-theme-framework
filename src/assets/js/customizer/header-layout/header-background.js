@@ -1,5 +1,5 @@
 ( function( $ ) {
-
+	
 	// Toggle a body class if a custom header exists.
 	$.each( [ 'external_header_video', 'header_image', 'header_video' ], function( index, settingId ) {
 		wp.customize( settingId, function( setting ) {

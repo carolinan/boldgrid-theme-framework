@@ -1271,6 +1271,20 @@ return array(
 		),
 		'sanitize_callback' => array( $bgtfw_color_sanitize, 'sanitize_palette_selector' ),
 	),
+	'bgtfw_header_transparent' => array(
+		'type'        => 'switch',
+		'settings'    => 'bgtfw_header_transparent',
+		'transport'   => 'postMessage',
+		'label'       => __( 'Header Transparency', 'bgtfw' ),
+		'description' => esc_attr__( 'Enable or Disable transparent header backgrounds.', 'bgtfw' ),
+		'section'     => 'header_image',
+		'default'     => false,
+		'priority'    => 20,
+		'choices'     => array(
+			'on'  => esc_attr__( 'Enable', 'bgtfw' ),
+			'off' => esc_attr__( 'Disable', 'bgtfw' ),
+		),
+	),
 	'bgtfw_site_title_color' => array(
 		'type'        => 'bgtfw-palette-selector',
 		'transport' => 'postMessage',
