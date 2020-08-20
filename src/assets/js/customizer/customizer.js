@@ -413,10 +413,16 @@ BOLDGRID.Customizer.Util.getInitialPalettes = function( option ) {
 			api.bind( 'ready', _.defer( function() {
 				if ( _.isFunction(  controlApi.section ) ) {
 					controls = controlApi.section( 'boldgrid_footer_panel' ).controls();
+
 					_( controls ).each( function( control ) {
 						var selector,
 							regex = new RegExp( /^(hide_)+\w*(_attribution)+$/, 'm' );
-
+						$( control.container )
+							.find( '.repeater-control.attribution' )
+							.closest( '.sortable-wrapper' )
+							.find( '.dashicons-trash' )
+							.removeClass( 'dashicons-trash' )
+							.addClass( 'attribution' );
 						if ( regex.test( control.id ) ) {
 							if ( parseInt( api( control.id )() ) ) {
 								selector = '.' + control.id.replace( 'hide_', '' ).replace( /_/g, '-' ) + '-link';
