@@ -12,13 +12,41 @@ if ( ! function_exists( 'boldgrid_paging_nav' ) ) :
  */
 function boldgrid_paging_nav() {
 	global $boldgrid_theme_framework;
+	global $paged;
 	$configs = $boldgrid_theme_framework->get_configs();
 
 	// Don't print empty markup if there's only one page.
 	if ( $GLOBALS['wp_query']->max_num_pages < 2 ) {
 		return;
 	}
+
+	$cat_base    = get_option( 'category_base' );
+
+	/*
+	 * On blank catergory_base category pages, we need to manually set the $paged variable to match the page query_var
+	 * because WordPress won't do it for us. This is to correct pagination issues when we are hiding the category base by
+	 * setting it to '.'
+	 */
+	if ( '.' === $cat_base && $GLOBALS['wp_query']->is_category ) {
+		$paged = isset( $GLOBALS['wp_query']->query_vars['page'] ) ? $GLOBALS['wp_query']->query_vars['page'] : 1;
+	}
+
 	$nav_classes = $configs['template']['post_navigation']['paging_nav_classes'];
+	$next_link   = get_next_posts_link( __( '<span class="meta-nav">&larr;</span> Older posts', 'bgtfw' ) );
+	$prev_link   = get_previous_posts_link( __( 'Newer posts <span class="meta-nav">&rarr;</span>', 'bgtfw' ) );
+
+	/*
+	 * With a hidden category base, we must also manually preg_replace the permalink pagination
+	 * with query string pagination to keep from getting 404 pages.
+	 */
+	if ( '.' === $cat_base && $GLOBALS['wp_query']->is_category ) {
+		$next_link = preg_replace( '/\/page\/(\d+)\/(\?page=\d+)?/', "?page=$1", $next_link );
+		if ( $paged === 2 ) {
+			$prev_link = preg_replace( '/\?page=\d+/', '', $prev_link );
+		} else {
+			$prev_link = preg_replace( '/\/page\/(\d+)\/(\?page=\d+)?/', "?page=$1", $prev_link );
+		}
+	}
 
 	?>
 	<nav class="navigation paging-navigation" role="navigation">
@@ -26,11 +54,11 @@ function boldgrid_paging_nav() {
 		<div class="nav-links">
 
 			<?php if ( get_next_posts_link() ) : ?>
-			<div class="<?php echo $nav_classes['next'] ?>"><?php next_posts_link( __( '<span class="meta-nav">&larr;</span> Older posts', 'bgtfw' ) ); ?></div>
+			<div class="<?php echo $nav_classes['next'] ?>"><?php echo $next_link ?></div>
 			<?php endif; ?>
 
 			<?php if ( get_previous_posts_link() ) : ?>
-			<div class="<?php echo $nav_classes['previous'] ?>"><?php previous_posts_link( __( 'Newer posts <span class="meta-nav">&rarr;</span>', 'bgtfw' ) ); ?></div>
+			<div class="<?php echo $nav_classes['previous'] ?>"><?php echo $prev_link ?></div>
 			<?php endif; ?>
 
 		</div><!-- .nav-links -->
