@@ -22,6 +22,7 @@ function boldgrid_paging_nav() {
 
 	$cat_base    = get_option( 'category_base' );
 	$perm_struct = get_option( 'permalink_structure' );
+	error_log( json_encode( $perm_struct ) );
 
 	/*
 	 * On blank catergory_base category pages, we need to manually set the $paged variable to match the page query_var
@@ -40,7 +41,7 @@ function boldgrid_paging_nav() {
 	 * With a hidden category base, we must also manually preg_replace the permalink pagination
 	 * with query string pagination to keep from getting 404 pages.
 	 */
-	if ( '.' === $cat_base && $perm_sctruct && $GLOBALS['wp_query']->is_category ) {
+	if ( '.' === $cat_base && $perm_struct && $GLOBALS['wp_query']->is_category ) {
 		$next_link = preg_replace( '/\/page\/(\d+)\/(\?page=\d+)?/', "?page=$1", $next_link );
 		if ( $paged === 2 ) {
 			$prev_link = preg_replace( '/\?page=\d+/', '', $prev_link );
